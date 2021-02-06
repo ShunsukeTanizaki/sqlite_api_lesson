@@ -23,7 +23,7 @@ const usersModule = (() => {
                 alert(resJson.error)
                 break;
             case 404:
-                // 指定したリソースが見つからない
+                // リクエストのリソースが見つからない
                 alert(resJson.error)
                 break;
             case 500:
@@ -31,18 +31,18 @@ const usersModule = (() => {
                 alert(resJson.error)
                 break;
             default:
-                alert("何らかのエラーが発生しました。　")
+                alert("何らかのエラーが発生しました")
                 break;
         }
 
     }
 
     return {
-        fetchAllUsers: async () => {
+        fetchAllUsers: async() => {
             const res = await fetch(BASE_URL)
             const users = await res.json()
 
-            for (let i=0; i < users.length; i++) {
+            for (let i = 0; i < users.length; i++) {
                 const user = users[i]
                 const body = `<tr>
                                 <td>${user.id}</td>
@@ -57,9 +57,9 @@ const usersModule = (() => {
             }
         },
         createUser: async () => {
-            const name = document.getElementById("name").value
-            const profile = document.getElementById("profile").value
-            const dateOfBirth = document.getElementById("date-of-birth").value
+            const name = document.getElementById("name").value 
+            const profile = document.getElementById("profile").value 
+            const dateOfBirth = document.getElementById("date-of-birth").value 
 
             // リクエストのbody
             const body = {
@@ -85,9 +85,9 @@ const usersModule = (() => {
             document.getElementById('date-of-birth').value = resJson.date_of_birth
         },
         saveUser: async (uid) => {
-            const name = document.getElementById("name").value
-            const profile = document.getElementById("profile").value
-            const dateOfBirth = document.getElementById("date-of-birth").value
+            const name = document.getElementById("name").value 
+            const profile = document.getElementById("profile").value 
+            const dateOfBirth = document.getElementById("date-of-birth").value 
 
             // リクエストのbody
             const body = {

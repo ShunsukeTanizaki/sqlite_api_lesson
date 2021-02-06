@@ -6,43 +6,19 @@ const usersModule = (() => {
     const headers = new Headers()
     headers.set("Content-Type", "application/json")
 
-    const handleError = async (res) => {
+    const handleError = async( ) => {
         const resJson = await res.json()
 
-        switch (res.status) {
-            case 200:
-                alert(resJson.message)
-                window.location.href = "/"
-                break;
-            case 201:
-                alert(resJson.message)
-                window.location.href = "/"
-                break;
-            case 400:
-                // リクエストのパラメータ間違い
-                alert(resJson.error)
-                break;
-            case 404:
-                // 指定したリソースが見つからない
-                alert(resJson.error)
-                break;
-            case 500:
-                // サーバーの内部エラー
-                alert(resJson.error)
-                break;
-            default:
-                alert("何らかのエラーが発生しました。　")
-                break;
-        }
-
+        alert(resJson.message)
+        window.location.href = "/"
     }
 
     return {
-        fetchAllUsers: async () => {
+        fetchAllUsers: async() => {
             const res = await fetch(BASE_URL)
             const users = await res.json()
 
-            for (let i=0; i < users.length; i++) {
+            for (let i = 0; i < users.length; i++) {
                 const user = users[i]
                 const body = `<tr>
                                 <td>${user.id}</td>
@@ -57,9 +33,9 @@ const usersModule = (() => {
             }
         },
         createUser: async () => {
-            const name = document.getElementById("name").value
-            const profile = document.getElementById("profile").value
-            const dateOfBirth = document.getElementById("date-of-birth").value
+            const name = document.getElementById("name").value 
+            const profile = document.getElementById("profile").value 
+            const dateOfBirth = document.getElementById("date-of-birth").value 
 
             // リクエストのbody
             const body = {
@@ -73,8 +49,6 @@ const usersModule = (() => {
                 headers: headers,
                 body: JSON.stringify(body)
             })
-
-            return handleError(res)
         },
         setExistingValue: async (uid) => {
             const res = await fetch(BASE_URL + "/" + uid)
@@ -85,9 +59,9 @@ const usersModule = (() => {
             document.getElementById('date-of-birth').value = resJson.date_of_birth
         },
         saveUser: async (uid) => {
-            const name = document.getElementById("name").value
-            const profile = document.getElementById("profile").value
-            const dateOfBirth = document.getElementById("date-of-birth").value
+            const name = document.getElementById("name").value 
+            const profile = document.getElementById("profile").value 
+            const dateOfBirth = document.getElementById("date-of-birth").value 
 
             // リクエストのbody
             const body = {
@@ -101,7 +75,6 @@ const usersModule = (() => {
                 headers: headers,
                 body: JSON.stringify(body)
             })
-            return handleError(res)
         },
         deleteUser: async (uid) => {
             const ret = window.confirm('このユーザーを削除しますか？')
@@ -112,8 +85,6 @@ const usersModule = (() => {
                     method: "DELETE",
                     headers: headers
                 })
-
-                return handleError(res)
             }
         }
     }
