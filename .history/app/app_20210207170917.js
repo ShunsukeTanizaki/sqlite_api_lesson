@@ -217,7 +217,7 @@ app.delete('/api/v1/users/:id', async (req, res) => {
 })
 
 // Delete follwers user
-app.delete('/api/v1/users/:id/following/:followed_id', async (req, res) => {
+app.delete('/api/v1/users/:id/following/:id', async (req, res) => {
 
     // Connect database
     const db = new sqlite3.Database(dbPath)

@@ -131,8 +131,8 @@ app.post('/api/v1/users', async (req, res) => {
 
 // Create a new following
 app.post('/api/v1/users/:id/following/:id', async (req, res) => {
-    if (!req.body.followed_id || req.body.followed_id === "") {
-        res.status(400).send({ error: "フォローするユーザーIDが指定されていません。" })
+    if (!req.body.ollowed_id || req.body.ollowed_id === "") {
+        res.status(400).send({error: "フォローするユーザーが指定されていません。"})
     } else {
         // Connect database
         const db = new sqlite3.Database(dbPath)
@@ -149,12 +149,13 @@ app.post('/api/v1/users/:id/following/:id', async (req, res) => {
                 `INSERT INTO following (following_id, followed_id) VALUES("${followingId}", "${followedId}")`,
                 db
             )
-            res.status(201).send({message: ` ${followedId}をフォローしました。`})
+            res.status(201).send({message: ` ${name}をフォローしました。`})
         } catch (e) {
             res.status(500).send({error: e})
         }
 
         db.close()
+
     }
 })
 
@@ -207,30 +208,6 @@ app.delete('/api/v1/users/:id', async (req, res) => {
             try {
                 await run(`DELETE FROM users WHERE id=${id}`, db)
                 res.status(200).send({message: "ユーザーを削除しました。"})
-            } catch (e) {
-                res.status(500).send({error: e})
-            }
-        }
-    })
-
-    db.close()
-})
-
-// Delete follwers user
-app.delete('/api/v1/users/:id/following/:followed_id', async (req, res) => {
-
-    // Connect database
-    const db = new sqlite3.Database(dbPath)
-    const followedId = req.params.followed_id
-
-    // 現在のユーザー情報を取得する
-    db.get(`SELECT * FROM following WHERE followed_id=${followedId}`, async (err, row) => {
-        if (!row) {
-            res.status(404).send({ error: `${followedId}指定されたフォロワーが見つかりません。`})
-        } else {
-            try {
-                await run(`DELETE FROM following WHERE id=${followedId}`, db)
-                res.status(200).send({message: `フォロワー${followedId}を削除しました。`})
             } catch (e) {
                 res.status(500).send({error: e})
             }

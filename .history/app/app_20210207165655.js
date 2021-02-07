@@ -216,30 +216,6 @@ app.delete('/api/v1/users/:id', async (req, res) => {
     db.close()
 })
 
-// Delete follwers user
-app.delete('/api/v1/users/:id/following/:followed_id', async (req, res) => {
-
-    // Connect database
-    const db = new sqlite3.Database(dbPath)
-    const followedId = req.params.followed_id
-
-    // 現在のユーザー情報を取得する
-    db.get(`SELECT * FROM following WHERE followed_id=${followedId}`, async (err, row) => {
-        if (!row) {
-            res.status(404).send({ error: `${followedId}指定されたフォロワーが見つかりません。`})
-        } else {
-            try {
-                await run(`DELETE FROM following WHERE id=${followedId}`, db)
-                res.status(200).send({message: `フォロワー${followedId}を削除しました。`})
-            } catch (e) {
-                res.status(500).send({error: e})
-            }
-        }
-    })
-
-    db.close()
-})
-
 const port = process.env.PORT || 3000;
 app.listen(port)
 console.log("Listen on port: " + port);

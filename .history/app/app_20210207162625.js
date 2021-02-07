@@ -44,7 +44,7 @@ app.get('/api/v1/users/:id', (req, res) => {
 })
 
 // Get following users
-app.get('/api/v1/users/:id/following', (req, res) => {
+app.get('/api/v1/users/:id/following/', (req, res) => {
     // Connect database
     const db = new sqlite3.Database(dbPath)
     const id = req.params.id
@@ -130,9 +130,9 @@ app.post('/api/v1/users', async (req, res) => {
 })
 
 // Create a new following
-app.post('/api/v1/users/:id/following/:id', async (req, res) => {
-    if (!req.body.followed_id || req.body.followed_id === "") {
-        res.status(400).send({ error: "フォローするユーザーIDが指定されていません。" })
+app.post('/api/v1/users', async (req, res) => {
+    if (!req.body.name || req.body.name === "") {
+        res.status(400).send({error: "ユーザー名が指定されていません。"})
     } else {
         // Connect database
         const db = new sqlite3.Database(dbPath)
@@ -141,20 +141,19 @@ app.post('/api/v1/users/:id/following/:id', async (req, res) => {
         const profile = req.body.profile ? req.body.profile : ""
         const dateOfBirth = req.body.date_of_birth ? req.body.date_of_birth : ""
 
-        const followingId = req.body.following_id ? req.body.following_id : ""
-        const followedId = req.body.followed_id ? req.body.followed_id : ""
 
         try {
             await run(
-                `INSERT INTO following (following_id, followed_id) VALUES("${followingId}", "${followedId}")`,
+                `INSERT INTO users (name, profile, date_of_birth) VALUES("${name}", "${profile}", "${dateOfBirth}")`,
                 db
             )
-            res.status(201).send({message: ` ${followedId}をフォローしました。`})
+            res.status(201).send({message: " 新規ユーザーを作成しました。"})
         } catch (e) {
             res.status(500).send({error: e})
         }
 
         db.close()
+
     }
 })
 
@@ -207,30 +206,6 @@ app.delete('/api/v1/users/:id', async (req, res) => {
             try {
                 await run(`DELETE FROM users WHERE id=${id}`, db)
                 res.status(200).send({message: "ユーザーを削除しました。"})
-            } catch (e) {
-                res.status(500).send({error: e})
-            }
-        }
-    })
-
-    db.close()
-})
-
-// Delete follwers user
-app.delete('/api/v1/users/:id/following/:followed_id', async (req, res) => {
-
-    // Connect database
-    const db = new sqlite3.Database(dbPath)
-    const followedId = req.params.followed_id
-
-    // 現在のユーザー情報を取得する
-    db.get(`SELECT * FROM following WHERE followed_id=${followedId}`, async (err, row) => {
-        if (!row) {
-            res.status(404).send({ error: `${followedId}指定されたフォロワーが見つかりません。`})
-        } else {
-            try {
-                await run(`DELETE FROM following WHERE id=${followedId}`, db)
-                res.status(200).send({message: `フォロワー${followedId}を削除しました。`})
             } catch (e) {
                 res.status(500).send({error: e})
             }
